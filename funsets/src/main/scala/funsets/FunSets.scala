@@ -18,6 +18,13 @@ object FunSets {
   def singletonSet(elem: Int): Set = x => elem == x // this enables all the other functions below, i.e. this is our "Set" implementation
 
   /**
+   * Returns the set of even integers
+   */
+  def evens: Set = x => x % 2 == 0 // use this for testing
+
+  def courseraSet: Set = x => Set(1,3,4,5,7,1000).contains(x)
+
+  /**
    * Indicates whether a set contains a given element.
    */
   def contains(s: Set, elem: Int): Boolean = s(elem)
@@ -43,7 +50,7 @@ object FunSets {
   /**
    * Returns the subset of `s` for which `p` holds.
    */
-  def filter(s: Set, p: Int => Boolean): Set = x => p(x) // todo: understand and unit test
+  def filter(s: Set, p: Int => Boolean): Set = x => contains(s, x) && p(x) // todo: understand and unit test
 
   /**
    * The bounds for `forall` and `exists` are +/- 1000.
@@ -51,27 +58,29 @@ object FunSets {
   val bound = 1000
 
   /**
-   * Returns whether all bounded integers within `s` satisfy `p`.
+   * Returns whether ALL bounded integers within `s` satisfy `p`.
    */
   def forall(s: Set, p: Int => Boolean): Boolean = {
     def iter(a: Int): Boolean = {
-      if (???) ???
-      else if (???) ???
-      else iter(???)
+      if (a > bound) true // stops the iteration and confirms that we have visited all elements and that forall holds true
+      else if (contains(s, a) && !p(a)) false // if element in set AND does not hold for p, return false and that's it, all done
+      else iter(a + 1)
     }
-    iter(???) // -bound ?
+    iter(-bound) // -bound ?
   }
 
   /**
-   * Returns whether there exists a bounded integer within `s`
+   * Returns whether there exists at least one bounded integer within `s`
    * that satisfies `p`.
    */
-  def exists(s: Set, p: Int => Boolean): Boolean = ???
+  def exists(s: Set, p: Int => Boolean): Boolean = !forall(s, x => !p(x))
+  // since forall must hold for ALL elements and it returns false if just element does not hold...
+  // we negate that logic by passing !p which will return false which we must negate again to indicate that the one element held true
 
   /**
    * Returns a set transformed by applying `f` to each element of `s`.
    */
-  def map(s: Set, f: Int => Int): Set = ???
+  def map(s: Set, f: Int => Int): Set = x => exists(s, y => f(y) == x)
 
   /**
    * Displays the contents of a set

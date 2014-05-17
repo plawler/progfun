@@ -52,6 +52,8 @@ class FunSetSuite extends FunSuite {
 
   test("contains is implemented") {
     assert(contains(x => true, 100))
+    assert(!contains(courseraSet, -100))
+    printSet(courseraSet)
   }
   
   /**
@@ -78,6 +80,7 @@ class FunSetSuite extends FunSuite {
     val s2 = singletonSet(2)
     val s3 = singletonSet(3)
     val s4 = singletonSet(3)
+    val s9 = singletonSet(9)
   }
 
   /**
@@ -138,6 +141,34 @@ class FunSetSuite extends FunSuite {
       val ss = filter(s1, x => x > 1)
       assert(!contains(ss, 1))
     }
+    assert(FunSets.toString(filter(courseraSet, x => x < 5)) != FunSets.toString(courseraSet))
+  }
+
+  test("forall evaluates correctly for all members of set") {
+    assert(!forall(courseraSet, x => x < 5))
+    assert(forall(courseraSet, x => x < 2000))
+  }
+
+  test("exists works the same way as forall") {
+    new TestSets {
+      val s = union(union(s1, s2), union(s3, s9))
+      printSet(s)
+      assert(exists(s, _ < 4))
+      assert(exists(s, _ < 2))
+      assert(!exists(s, _ < 0))
+    }
+  }
+
+  test("map transforms a set by applying function") {
+    new TestSets {
+      val transformed = map(s1, x => x * 2)
+      assert(contains(transformed, 2))
+      assert(!contains(transformed, 3))
+    }
+//    printSet(map(evens, x => x + 1))
+    val withOdds = map(evens, x => x + 1)
+    printSet(withOdds)
+    assert(contains(withOdds, 3))
   }
 
 }

@@ -19,11 +19,13 @@ def cube: (Int) => Int = x => x * x * x
       accepts an Int and returns an Int
  */
 sum(cube)(0,3) // holy shit!
+
 /**************************************************/
 // equivalent to sum, but removes the need for the inner function
 def sumSugar(f: Int => Int)(a: Int, b: Int): Int =
   if (a > b) 0 else f(a) + sumSugar(f)(a + 1, b)
 sumSugar(cube)(0,3)
+
 /**************************************************/
 def product(f: Int => Int)(a: Int, b: Int): Int =
   if (a > b) 1 else f(a) * product(f)(a + 1, b)
