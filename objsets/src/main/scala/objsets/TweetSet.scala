@@ -7,9 +7,9 @@ import TweetReader._
  * A class to represent tweets.
  */
 class Tweet(val user: String, val text: String, val retweets: Int) {
-  override def toString: String =
-    "User: " + user + "\n" +
-    "Text: " + text + " [" + retweets + "]"
+//  override def toString: String = "{User:" + user + " Text:" + text + " Retweets:" + retweets + "}"
+//  override def toString: String = s"{$user says '$text' [$retweets]}"
+override def toString: String = s"{$user}"
 }
 
 /**
@@ -42,7 +42,7 @@ abstract class TweetSet {
    * Question: Can we implement this method here, or should it remain abstract
    * and be implemented in the subclasses?
    */
-  def filter(p: Tweet => Boolean): TweetSet = ???
+  def filter(p: Tweet => Boolean): TweetSet = filterAcc(p, new Empty)
 
   /**
    * This is a helper method for `filter` that propagates the accumulated tweets.
@@ -55,7 +55,7 @@ abstract class TweetSet {
    * Question: Should we implement this method here, or should it remain abstract
    * and be implemented in the subclasses?
    */
-   def union(that: TweetSet): TweetSet = ???
+   def union(that: TweetSet): TweetSet
 
   /**
    * Returns the tweet from this set which has the greatest retweet count.
@@ -90,7 +90,7 @@ abstract class TweetSet {
    *
    * If `this.contains(tweet)`, the current set is returned.
    */
-  def incl(tweet: Tweet): TweetSet
+  def   incl(tweet: Tweet): TweetSet
 
   /**
    * Returns a new `TweetSet` which excludes `tweet`.
@@ -110,8 +110,7 @@ abstract class TweetSet {
 
 class Empty extends TweetSet {
 
-  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = ???
-
+  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = acc
 
   /**
    * The following methods are already implemented
@@ -124,11 +123,23 @@ class Empty extends TweetSet {
   def remove(tweet: Tweet): TweetSet = this
 
   def foreach(f: Tweet => Unit): Unit = ()
+
+  override def toString = "{_}"
+
+  override def union(that: TweetSet): TweetSet = that
 }
 
-class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
+class NonEmpty(val elem: Tweet, val left: TweetSet, val right: TweetSet) extends TweetSet {
 
-  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = ???
+  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
+//    the following traverses post-order Left,Right,Node or LRN
+//    val twtL = left.filterAcc(p, acc)
+//    val twtR = right.filterAcc(p, acc)
+//    val tweets = twtL union twtR
+    val tweets = left.filterAcc(p, right.filterAcc(p, acc)) // exhaustive, recursive search through the entire tree, does the same as above
+    if (p(elem)) tweets.incl(elem)
+    else tweets
+  }
 
   /**
    * The following methods are already implemented
@@ -139,7 +150,7 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     else if (elem.text < x.text) right.contains(x)
     else true
 
-  def incl(x: Tweet): TweetSet = {
+  def incl(x: Tweet): TweetSet = {  // foo.incl(new Tweet("f", "f", 0))
     if (x.text < elem.text) new NonEmpty(elem, left.incl(x), right)
     else if (elem.text < x.text) new NonEmpty(elem, left, right.incl(x))
     else this
@@ -149,6 +160,11 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     if (tw.text < elem.text) new NonEmpty(elem, left.remove(tw), right)
     else if (elem.text < tw.text) new NonEmpty(elem, left, right.remove(tw))
     else left.union(right)
+
+  override def union(that: TweetSet): TweetSet =
+    ((left union right) union that) incl elem
+
+  override def toString = s"{${left}${elem}${right}}"
 
   def foreach(f: Tweet => Unit): Unit = {
     f(elem)
