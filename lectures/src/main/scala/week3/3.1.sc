@@ -36,4 +36,3 @@ val t2 = t1 incl 4
 val t3 = new NonEmpty(5, Empty, Empty)
 
 val t4 = t2 union t3
-
