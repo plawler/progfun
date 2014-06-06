@@ -5,6 +5,7 @@ def insert(x: Int, xs: List[Int]): List[Int] = xs match {
   case y :: ys => if (x <= y) x :: xs else y :: insert(x, ys) // pattern matches list with head matching y and tail matching ys
 }
 
+// insertion sort
 def isort(xs: List[Int]): List[Int] = xs match {
   case List() => List()
   case y :: ys => insert(y, isort(ys)) // pattern matches list with head matching y and tail matching ys

@@ -26,7 +26,7 @@ class HuffmanSuite extends FunSuite {
     }
   }
 
-  test("string2chars(\"hello, world\")") {
+  test("string2chars") {
     assert(string2Chars("hello, world") === List('h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd'))
   }
 

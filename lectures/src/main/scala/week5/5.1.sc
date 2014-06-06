@@ -30,6 +30,7 @@ def remove[T](xs: List[T], n: Int): List[T] = xs match {
 }
 
 last(List(1,2,3))
+
 init(List(1,2,3))
 
 concat(List(1,2,3), List(4,5,6))
