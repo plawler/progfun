@@ -18,14 +18,14 @@ def cube: (Int) => Int = x => x * x * x
     returns a function that...
       accepts an Int and returns an Int
  */
+// the product of each int along the interval from 0-3
 sum(cube)(0,3) // holy shit!
 
 /**************************************************/
 // equivalent to sum, but removes the need for the inner function
 def sumSugar(f: Int => Int)(a: Int, b: Int): Int =
-  if (a > b) 0 else f(a) + sumSugar(f)(a + 1, b)
+  if (a > b) 0 else f(a) + sumSugar(f)(a + 1, b) // this whole fucking thing is equivalent to sumF above
 sumSugar(cube)(0,3)
-
 /**************************************************/
 def product(f: Int => Int)(a: Int, b: Int): Int =
   if (a > b) 1 else f(a) * product(f)(a + 1, b)
@@ -40,7 +40,6 @@ def mapReduce(f: Int => Int, combine: (Int, Int) => Int, z: Int)(a: Int, b: Int)
 }
 def productMR(f: Int => Int)(a: Int, b: Int): Int =
   mapReduce(f, (x,y) => x * y, 1)(a, b)
-
 productMR(x => x * x)(3,4)
 // factorial with our product function
 def fact(n: Int):Int = productMR(x => x)(1, n)

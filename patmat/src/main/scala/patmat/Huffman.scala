@@ -22,22 +22,20 @@ object Huffman {
   case class Fork(left: CodeTree, right: CodeTree, chars: List[Char], weight: Int) extends CodeTree
   case class Leaf(char: Char, weight: Int) extends CodeTree
 
-
-
   // Part 1: Basics
 
   def weight(tree: CodeTree): Int = tree match {
-    case Fork(left, right, chars, weight ) => weight
-    case Leaf(char, weight ) =>  weight
+    case Fork(_, _, _, weight ) => weight // use "_" to substitute for params we don't care about. fucking terse.
+    case Leaf(_, weight ) =>  weight
   }
 
   def chars(tree: CodeTree): List[Char] = tree match {
-    case Fork(left, right, chars, weight ) => chars
-    case Leaf(char, weight ) => List(char)
+    case Fork(_, _, chars, _) => chars
+    case Leaf(char, _) => List(char)
   }
 
   def makeCodeTree(left: CodeTree, right: CodeTree) =
-    Fork(left, right, chars(left) ::: chars(right), weight(left) + weight(right))
+    Fork(left, right, chars(left) ::: chars(right), weight(left) + weight(right)) // ":::" is concatenate List operator
 
   // Part 2: Generating Huffman trees
 
@@ -75,7 +73,20 @@ object Huffman {
    *       println("integer is  : "+ theInt)
    *   }
    */
-  def times(chars: List[Char]): List[(Char, Int)] = ???
+  def times(chars: List[Char]): List[(Char, Int)] = {
+    def acc(char: Char, frequency: List[(Char, Int)]): List[(Char, Int)] = frequency match {
+      case Nil => List((char, 1)) // the empty list means that we create a frequency of 1 for the character
+      case aPair :: theRest =>
+        if (aPair._1 == char) (char, aPair._2 + 1) :: theRest // increment the frequency for the character
+        else aPair :: acc(char, theRest) // recurse through the rest of the pair elements in the frequency list
+    }
+
+    chars match {
+      case Nil => Nil
+      case x :: xs => acc(x, times(xs))
+    }
+
+  }
 
   /**
    * Returns a list of `Leaf` nodes for a given frequency table `freqs`.

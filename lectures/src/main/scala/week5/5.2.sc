@@ -5,9 +5,11 @@ def msort(xs: List[Int]): List[Int] = {
 
     def merge(xs: List[Int], ys: List[Int]): List[Int] =
       (xs, ys) match {
-        case (List(), ys1) => ys1
-        case (xs1, List()) => xs1
-        case (x :: xs1, y :: ys1) => if (x < y) x :: merge(xs1, ys) else y :: merge(xs, ys1)
+        case (Nil, ys1) => ys1 // Nil syntactically instead of List()
+        case (xs1, Nil) => xs1
+        case (x :: xs1, y :: ys1) =>
+          if (x < y) x :: merge(xs1, ys)
+          else y :: merge(xs, ys1)
       }
 
     val (fst, snd) = xs splitAt n
