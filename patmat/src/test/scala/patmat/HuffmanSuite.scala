@@ -50,21 +50,21 @@ class HuffmanSuite extends FunSuite {
     assert(combine(leaflist) === List(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4)))
   }
 
-  test("createCodeTree efficiency") {
-    testCodeTreeEfficiency("someText", 22)
-    testCodeTreeEfficiency("Huffman est cool", 58)
-    testCodeTreeEfficiency("Huffman coding is a compression algorithm that can be used to compress lists of characters.", 373)
-  }
-
-  private def testCodeTreeEfficiency(text: String, length: Int) {
-    val someTextCodeTree = createCodeTree(text.toList)
-    assert(encode(someTextCodeTree)(text.toList).length === length)
-  }
-
-
-//  test("decode and encode a very short text should be identity") {
-//    new TestTrees {
-//      assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
-//    }
+//  test("createCodeTree efficiency") {
+//    testCodeTreeEfficiency("someText", 22)
+//    testCodeTreeEfficiency("Huffman est cool", 58)
+//    testCodeTreeEfficiency("Huffman coding is a compression algorithm that can be used to compress lists of characters.", 373)
 //  }
+//
+//  private def testCodeTreeEfficiency(text: String, length: Int) {
+//    val someTextCodeTree = createCodeTree(text.toList)
+//    assert(encode(someTextCodeTree)(text.toList).length === length)
+//  }
+
+  test("decode and encode  a very short text should be identity") {
+    new TestTrees {
+      assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
+    }
+  }
+
 }
