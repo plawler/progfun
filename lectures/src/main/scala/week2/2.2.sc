@@ -24,7 +24,7 @@ sum(cube)(0,3) // holy shit!
 /**************************************************/
 // equivalent to sum, but removes the need for the inner function
 def sumSugar(f: Int => Int)(a: Int, b: Int): Int =
-  if (a > b) 0 else f(a) + sumSugar(f)(a + 1, b) // this whole fucking thing is equivalent to sumF above
+  if (a > b) 0 else f(a) + sumSugar(f)(a + 1, b) // this fucking line is equivalent to sumF above
 sumSugar(cube)(0,3)
 /**************************************************/
 def product(f: Int => Int)(a: Int, b: Int): Int =
