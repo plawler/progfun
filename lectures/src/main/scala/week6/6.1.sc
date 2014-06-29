@@ -29,3 +29,16 @@ def scalarProduct(xs: Vector[Double], ys: Vector[Double]): Double =
   (xs zip ys).map(xy => xy._1 * xy._2).sum
 
 scalarProduct(first, second)
+
+
+val odds = Seq(1,3,5)
+val evens = Seq(2,4,6)
+
+val all = (odds zip evens).map((t) => List(t._1, t._2)).flatten
+val all2 = (odds zip evens).flatMap((t) => List(t._1, t._2))
+
+
+
+
+
+
